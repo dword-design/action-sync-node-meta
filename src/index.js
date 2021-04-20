@@ -42,7 +42,8 @@ async function main() {
     info("No package.json found, skipping")
     return
   }
-  let pkg = JSON.parse(pkgString)
+  const originalPkg = JSON.parse(pkgString)
+  let pkg = originalPkg
   debug(`Loaded ${zahl(pkg, "field")} from ${pkgFile}`)
   /**
    * @type {import("lib/Property").Repository}

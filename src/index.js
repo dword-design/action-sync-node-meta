@@ -42,8 +42,7 @@ async function main() {
     info("No package.json found, skipping")
     return
   }
-  const originalPkg = JSON.parse(pkgString)
-  let pkg = originalPkg
+  let pkg = JSON.parse(pkgString)
   debug(`Loaded ${zahl(pkg, "field")} from ${pkgFile}`)
   /**
    * @type {import("lib/Property").Repository}
@@ -98,18 +97,16 @@ async function main() {
       syncFailed = true
     }
   }
-  const isChanged = overwriteFile
-    ? !isEqual(originalPkg, pkg)
-    : results.filter(result => {
-      if (!result.enabled) {
-        return false
-      }
-      if (result.isEqual) {
-        return false
-      }
-      return true
-    })
-  if (overwriteFile && isChanged) {
+  const changedResults = results.filter(result => {
+    if (!result.enabled) {
+      return false
+    }
+    if (result.isEqual) {
+      return false
+    }
+    return true
+  })
+  if (overwriteFile && hasContent(changedResults)) {
     const indent = detectIndent(pkgString).indent || "    "
     const outputJson = `${JSON.stringify(pkg, null, indent)}\n`
     await fsp.outputFile(pkgFile, outputJson)
